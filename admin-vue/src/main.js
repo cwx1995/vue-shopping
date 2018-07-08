@@ -6,7 +6,7 @@ import router from './router';
 import ElementUI from 'element-ui';
 import '../node_modules/element-ui/lib/theme-chalk/index.css';
 import '@/assets/css/style.css';
-import MyAxios from '@/plugins/MyAxios';
+import MyAxios from '@/plugins/MyAxios.js';
 
 Vue.config.productionTip = false;
 // 注册MyAxios插件
@@ -20,3 +20,5 @@ new Vue({
   components: { App },
   template: '<App/>'
 });
+
+
