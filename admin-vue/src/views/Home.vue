@@ -91,32 +91,32 @@
       </el-main>
     </el-container>
   </el-container>
-</template> 
+</template>
 
 <script>
 export default {
-//判断登录
-beforeCreate(){
-    //从sessionStorage中获取token,看是否存在
-    const token = sessionStorage.getItem('token');
-    if(!token){
-        //失败跳转回登录页
-        this.$router.push({name:'login'});
-        //提示
-        this.$message.warning('请先登录');
+  // 判断登录
+  beforeCreate() {
+    // 从sessionStorage中获取token,看是否存在
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      // 失败跳转回登录页
+      this.$router.push({ name: "login" });
+      // 提示
+      this.$message.warning("请先登录");
     }
-},
-methods:{
-    //退出登录
-    handleLogout(){
-       //删除sessionStorage中的token
-       sessionStorage.clear();
-       //跳转
-       this.$router.push({name:'login'});
-       //提示
-       this.$message.success('退出成功');
+  },
+  methods: {
+    // 退出登录
+    handleLogout() {
+      // 删除sessionStorage中的token
+      sessionStorage.clear();
+      // 跳转
+      this.$router.push({ name: "login" });
+      // 提示
+      this.$message.success("退出成功");
     }
-}
+  }
 };
 </script>
 
@@ -124,14 +124,14 @@ methods:{
 .container {
   height: 100%;
 }
- .header .span-img{
-     height: 50px;
-     margin-left: 50px;
-     margin-top: 5px;
- }
+.header .span-img {
+  height: 50px;
+  margin-left: 50px;
+  margin-top: 5px;
+}
 .header {
   background-color: #b3c0d1;
-  padding:0;
+  padding: 0;
 }
 .header .middle {
   line-height: 60px;

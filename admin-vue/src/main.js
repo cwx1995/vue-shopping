@@ -9,9 +9,9 @@ import '@/assets/css/style.css';
 import MyAxios from '@/plugins/MyAxios.js';
 import moment from 'moment';
 
-//全局过滤器 格式化时间
-Vue.filter('fmtDate',(value,fmtString)=>{
- return moment(value).format(fmtString);
+// 全局过滤器 格式化时间
+Vue.filter('fmtDate', (value, fmtString) => {
+  return moment(value).format(fmtString);
 });
 
 Vue.config.productionTip = false;
@@ -26,5 +26,3 @@ new Vue({
   components: { App },
   template: '<App/>'
 });
-
-

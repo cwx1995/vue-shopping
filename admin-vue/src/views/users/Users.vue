@@ -42,9 +42,9 @@
         label="电话">
       </el-table-column>
       <el-table-column
-        
+
         label="创建日期">
-        <template slot-scope="scope"> 
+        <template slot-scope="scope">
          {{scope.row.create_time | fmtDate('YYYY-MM-DD') }}
         </template>
       </el-table-column>
@@ -69,49 +69,85 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页 -->
+    <!-- @size-change 每页多少条数据发生改变 触发的事件 -->
+    <!-- @current-change 当前页码改变发生 -->
+    <!-- current-page 当前页码 -->
+    <!-- page-sizes 每页多少条数据的下拉框 -->
+    <!-- page-size 每页显示多少条数据 -->
+
+    <!-- total  总条数 -->
+
+    <!-- layout 分页所支持的功能 -->
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pagenum"
+      :page-sizes="[2, 4, 6, 8]"
+      :page-size="pagesize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total">
+    </el-pagination>
     </el-card>
 </template>
 
 <script>
 export default {
-          data() {
-        return {
-          list:[],
-          loading:true
-        };
+  data() {
+    return {
+      list: [],
+      loading: true,
+      // 分页相关数据
+      pagenum:1,// 页码
+      pagesize:2, // 每页条数
+      total:0// 总共的数据条数，从服务器获取
+    };
+  },
+  created() {
+    // 发送请求获取数据
+    this.loadData();
+  },
+  methods: {
+    handleSizeChange(val) {
+      // 每页条数改变的时候
+        this.pagesize= val;
+        this.loadData();
+        console.log(`每页 ${val} 条`);
       },
-      created(){
-          //发送请求获取数据
-          this.loadData();
+      handleCurrentChange(val) {
+        // 页码改变的时候
+        this.pagenum = val;
+        this.loadData();
+        console.log(`当前页: ${val}`);
       },
-      methods:{
-          async loadData(){
-              //发送异步请求之前 旋转加载
-              this.loading = true;
-              //发送请求之前 先获取token
-              const token = sessionStorage.getItem('token');
-              //在请求头中设置token 查文档找
-              this.$http.defaults.headers.common['Authorization'] = token;
-              //发送异步请求，获取数据
-              const res = await this.$http.get('users?pagenum=1&pagesize=10');
-              //发送异步请求之后 取消旋转加载
-                  this.loading = false;
-              //获取响应数据
-              const data = res.data;
-              //定义meta中的msg和status
-              const{meta:{msg,status}}=data;
-              //成功时
-              if(status===200){
-                  //定义data中的users
-                  const {data:{users}}=data;
-                  this.list = users;
-              }else{
-                  //错误提示框
-                  this.$message.error(msg);
-              }
-
-          }
+    async loadData() {
+      // 发送异步请求之前 旋转加载
+      this.loading = true;
+      // 发送请求之前 先获取token
+      const token = sessionStorage.getItem('token');
+      // 在请求头中设置token 查文档找
+      this.$http.defaults.headers.common['Authorization'] = token;
+      // 发送异步请求，获取数据
+      const res = await this.$http.get(`users?pagenum=${this.pagenum}&pagesize=${this.pagesize}`);
+      // 发送异步请求之后 取消旋转加载
+      this.loading = false;
+      // 获取响应数据
+      const data = res.data;
+      // 定义meta中的msg和status
+      const {meta: {msg, status}} = data;
+      // 成功时
+      if (status === 200) {
+        // 定义data中的users
+        const {data: {users,total}} = data;
+        this.list = users;
+        //获取总共多少条数据
+        this.total = total;
+      } else {
+        // 错误提示框
+        this.$message.error(msg);
       }
+    }
+  }
 };
 </script>
 

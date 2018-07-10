@@ -41,13 +41,13 @@ export default {
     //         // 成功
     //         this.$message.success(msg);
     //       // 跳转
-              //  this.$router.push({name:'home'});
+    //  this.$router.push({name:'home'});
     //       } else {
     //         this.$message.error(msg);
     //       }
     //     });
     // }
-    //es7 方法 省了回调函数(then)
+    // es7 方法 省了回调函数(then)
     async handleLogin() {
       const res = await this.$http.post('login', this.formData);
       const data = res.data;
@@ -56,7 +56,7 @@ export default {
         this.$message.success(msg);
         const {data: {token}} = data;
         sessionStorage.setItem('token', token);
-        this.$router.push({name:'home'});
+        this.$router.push({name: 'home'});
       } else {
         this.$message.error(msg);
       }
