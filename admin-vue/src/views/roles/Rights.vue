@@ -8,23 +8,29 @@
     </el-breadcrumb>
 <!-- //表格 -->
     <el-table
+
+        class="tb"
         border
         stripe
         :data="list"
         style="width: 100%">
+         <el-table-column
+            type="index"
+            width="50">
+        </el-table-column>
         <el-table-column
-            prop="date"
-            label="日期"
+            prop="authName"
+            label="权限名称"
             width="180">
         </el-table-column>
         <el-table-column
-            prop="name"
-            label="姓名"
+            prop="path"
+            label="路径"
             width="180">
         </el-table-column>
         <el-table-column
-            prop="address"
-            label="地址">
+            prop="level"
+            label="层级">
         </el-table-column>
         </el-table>
     </el-card>
@@ -32,12 +38,35 @@
 
 <script>
 export default {
-
+  data() {
+    return {
+      list: []
+    };
+  },
+  created() {
+    this.loadData();
+  },
+  methods: {
+    async  loadData() {
+      // 发送请求之前 先获取token
+      const token = sessionStorage.getItem('token');
+      // 在请求头中设置token 查文档找
+      this.$http.defaults.headers.common['Authorization'] = token;
+      const res = await this.$http.get('rights/list');
+      const data = res.data;
+      //  console.log(data);
+      this.list = data.data;
+    }
+  }
 };
 </script>
 
 <style>
 .box-card{
     height: 100%;
+    overflow: auto;
+}
+.tb{
+    margin-top: 10px;
 }
 </style>

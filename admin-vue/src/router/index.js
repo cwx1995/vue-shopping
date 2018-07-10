@@ -25,13 +25,14 @@ export default new Router({
           name: 'users',
           path: '/users',
           component: Users
+        },
+        {
+          name: 'rights',
+          path: '/rights',
+          component: Rights
         }
       ]
-    },
-    {
-      name: 'rights',
-      path: '/rights',
-      component: Rights
     }
+
   ]
 });
