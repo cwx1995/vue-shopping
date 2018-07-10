@@ -69,7 +69,7 @@
         label="操作">
         <template slot-scope="scope">
         <el-button size="mini" plain type="primary" icon="el-icon-edit" ></el-button>
-        <el-button size="mini" plain type="danger" icon="el-icon-delete" ></el-button>
+        <el-button size="mini" @click="handleDelete(scope.row.id)" plain type="danger" icon="el-icon-delete" ></el-button>
         <el-button size="mini" plain type="success" icon="el-icon-check" ></el-button>
         </template>
       </el-table-column>
@@ -161,20 +161,54 @@ export default {
       this.loadData();
     },
     //状态修改按钮
-   async handleSwitchChange(user){
-     const res = await this.$http.put(`users/${user.id}/state/${user.mg_state}`);
-      // 响应对象 res = { data, status }
-      // 服务器返回的数据格式 res.data  = { data: {}, meta: {} }
-      const data = res.data;
-      const{meta:{status,msg}}=data;
-     if(status===200){
-       this.$message.success(msg);
-     }else{
-      this.$message.error(msg);
-     }
+    async handleSwitchChange(user){
+      const res = await this.$http.put(`users/${user.id}/state/${user.mg_state}`);
+        // 响应对象 res = { data, status }
+        // 服务器返回的数据格式 res.data  = { data: {}, meta: {} }
+        const data = res.data;
+        const{meta:{status,msg}}=data;
+      if(status===200){
+        this.$message.success(msg);
+      }else{
+        this.$message.error(msg);
+      }
+      },
+    async handleDelete(id){
+      this.$confirm('此操作将永久删除该文件, 是否继续?','提示',{
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+      }).then(async()=>{
+        // 包裹 await 的函数都需要加上async
+          // 点击确定按钮执行
+          const res = await this.$http.delete(`users/${id}`);
+            // 服务器返回的数据
+            const data = res.data;
+            // meta内部的status和msg
+            const{meta:{status,msg}} = data;
+            if(status===200){
+              //跳回第一页
+                this.pagenum = 1;
+              this.loadData();
+              // 删除成功 重新加载数据
+              this.$message({
+          type:'success',
+          message:'msg'
+        });
+              
+            }else{
+              this.$message.error(msg);
+            }
+      }).catch(()=>{
+        // 点击取消按钮执行
+        this.$message({
+          type:'info',
+          message:'已取消删除'
+        });
+      });
     }
   }
-};
+  };
 </script>
 
 <style>
