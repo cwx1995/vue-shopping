@@ -17,7 +17,7 @@
             <el-input class="searchInput" v-model="searchValue" clearable placeholder="请输入内容">
             <el-button @click="handleSearch" slot="append" icon="el-icon-search"></el-button>
             </el-input>
-            <el-button mini type="success" plain >添加用户</el-button>
+            <el-button mini type="success" plain @click="addUserDialogVisible=true">添加用户</el-button>
         </el-col>
     </el-row>
     <!-- 表格 -->
@@ -80,9 +80,7 @@
     <!-- current-page 当前页码 -->
     <!-- page-sizes 每页多少条数据的下拉框 -->
     <!-- page-size 每页显示多少条数据 -->
-
     <!-- total  总条数 -->
-
     <!-- layout 分页所支持的功能 -->
     <el-pagination
       @size-change="handleSizeChange"
@@ -93,6 +91,31 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
+    <!-- 添加用户的弹窗 -->
+    <el-dialog title="添加用户" :visible.sync="addUserDialogVisible">
+      <el-form 
+      ref="myform"
+      :rules="formRules"
+      label-width="100px"
+      :model="formData">
+        <el-form-item prop="username" label="用户名" >
+          <el-input v-model="formData.username" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item prop="password" label="密码" >
+          <el-input  type="password" v-model="formData.password" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" >
+          <el-input v-model="formData.email" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" >
+          <el-input v-model="formData.mobile" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addUserDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleAdd">确 定</el-button>
+      </div>
+</el-dialog>
     </el-card>
 </template>
 
@@ -107,7 +130,27 @@ export default {
       pagesize:2, // 每页条数
       total:0,// 总共的数据条数，从服务器获取
         // 绑定搜索文本框
-      searchValue: ''
+      searchValue: '',
+       // 控制添加用户的对话框显示或者隐藏
+      addUserDialogVisible: false,
+        // 绑定表单数据
+        formData:{
+          username:'',
+          password:'',
+          email:'',
+          mobile:''
+        },
+         // 表单的验证规则
+    formRules:{
+     username: [
+          { required: true, message: '请输入用户名称', trigger: 'blur' },
+          { min: 1, max: 6, message: '长度在 1 到 6 个字符', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 3, max: 6, message: '长度在 3 到 6 个字符', trigger: 'blur' }
+        ],
+  }
     };
   },
   created() {
@@ -206,6 +249,34 @@ export default {
           message:'已取消删除'
         });
       });
+    },
+    // 添加用户的对话框中的确定按钮，要执行添加用户的操作
+    async handleAdd(){
+      // 表单的 DOM对象 this.$refs.myform
+      this.$refs.myform.validate(async(valid) => {
+        if (!valid) {
+          return this.$message.error('请完整输入内容');
+        }
+        //验证成功
+         const res = await this.$http.post('users',this.formData);
+      // 相当于回调函数中的处理
+      const data = res.data;
+      const {meta:{status,msg}} =data;
+      if(status===201){
+           // 添加成功
+        // 隐藏对话框
+       this.addUserDialogVisible=false;
+       this.$message.success(msg);
+       this.loadData();
+       // 清空文本框的值
+       for(let key in this.formData){
+         this.formData[key]='';
+       }
+      }else{
+        this.$message.error(msg);
+      }
+      });
+     
     }
   }
   };
