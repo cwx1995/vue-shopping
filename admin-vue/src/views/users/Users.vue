@@ -9,9 +9,13 @@
     </el-breadcrumb>
     <!-- 搜索区域 -->
     <el-row class="searchArea">
-        <el-col :span="24" >
-            <el-input class="searchInput" clearable placeholder="请输入内容">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+        <el-col :span="24" >      
+           <!-- 搜索功能
+          1. 绑定搜索文本框
+          2. 给按钮搜索按钮
+         -->
+            <el-input class="searchInput" v-model="searchValue" clearable placeholder="请输入内容">
+            <el-button @click="handleSearch" slot="append" icon="el-icon-search"></el-button>
             </el-input>
             <el-button mini type="success" plain >添加用户</el-button>
         </el-col>
@@ -54,6 +58,7 @@
         <template slot-scope="scope">
             <!-- scope.row  当前行绑定的数据对象-->
             <el-switch
+            @change="handleSwitchChange(scope.row)"
             v-model="scope.row.mg_state"
             active-color="#13ce66"
             inactive-color="#ff4949">
@@ -100,7 +105,9 @@ export default {
       // 分页相关数据
       pagenum:1,// 页码
       pagesize:2, // 每页条数
-      total:0// 总共的数据条数，从服务器获取
+      total:0,// 总共的数据条数，从服务器获取
+        // 绑定搜索文本框
+      searchValue: ''
     };
   },
   created() {
@@ -108,6 +115,7 @@ export default {
     this.loadData();
   },
   methods: {
+    // 分页事件
     handleSizeChange(val) {
       // 每页条数改变的时候
         this.pagesize= val;
@@ -120,6 +128,7 @@ export default {
         this.loadData();
         console.log(`当前页: ${val}`);
       },
+
     async loadData() {
       // 发送异步请求之前 旋转加载
       this.loading = true;
@@ -128,7 +137,7 @@ export default {
       // 在请求头中设置token 查文档找
       this.$http.defaults.headers.common['Authorization'] = token;
       // 发送异步请求，获取数据
-      const res = await this.$http.get(`users?pagenum=${this.pagenum}&pagesize=${this.pagesize}`);
+      const res = await this.$http.get(`users?pagenum=${this.pagenum}&pagesize=${this.pagesize}&query=${this.searchValue}`);
       // 发送异步请求之后 取消旋转加载
       this.loading = false;
       // 获取响应数据
@@ -146,6 +155,23 @@ export default {
         // 错误提示框
         this.$message.error(msg);
       }
+    },
+    //搜索按钮
+    handleSearch(){
+      this.loadData();
+    },
+    //状态修改按钮
+   async handleSwitchChange(user){
+     const res = await this.$http.put(`users/${user.id}/state/${user.mg_state}`);
+      // 响应对象 res = { data, status }
+      // 服务器返回的数据格式 res.data  = { data: {}, meta: {} }
+      const data = res.data;
+      const{meta:{status,msg}}=data;
+     if(status===200){
+       this.$message.success(msg);
+     }else{
+      this.$message.error(msg);
+     }
     }
   }
 };
