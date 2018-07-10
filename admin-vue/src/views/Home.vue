@@ -98,12 +98,12 @@ export default {
   // 判断登录
   beforeCreate() {
     // 从sessionStorage中获取token,看是否存在
-    const token = sessionStorage.getItem("token");
+    const token = sessionStorage.getItem('token');
     if (!token) {
       // 失败跳转回登录页
-      this.$router.push({ name: "login" });
+      this.$router.push({ name: 'login' });
       // 提示
-      this.$message.warning("请先登录");
+      this.$message.warning('请先登录');
     }
   },
   methods: {
@@ -112,9 +112,9 @@ export default {
       // 删除sessionStorage中的token
       sessionStorage.clear();
       // 跳转
-      this.$router.push({ name: "login" });
+      this.$router.push({ name: 'login' });
       // 提示
-      this.$message.success("退出成功");
+      this.$message.success('退出成功');
     }
   }
 };
