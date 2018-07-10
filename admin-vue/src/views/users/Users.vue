@@ -70,7 +70,7 @@
         <template slot-scope="scope">
         <el-button size="mini" @click="handleShowEditDialog(scope.row)" plain type="primary" icon="el-icon-edit" ></el-button>
         <el-button size="mini" @click="handleDelete(scope.row.id)" plain type="danger" icon="el-icon-delete" ></el-button>
-        <el-button size="mini" plain type="success" icon="el-icon-check" ></el-button>
+        <el-button size="mini" @click="handleShowSetRoleDialog(scope.row)" plain type="success" icon="el-icon-check" ></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -138,6 +138,33 @@
         <el-button type="primary" @click="handleEdit">确 定</el-button>
       </div>
 </el-dialog>
+<!-- 分配角色的弹出框 -->
+ <el-dialog  title="分配角色" :visible.sync="setRoleDialogVisible">
+      <el-form
+      label-width="100px"
+      >
+        <el-form-item prop="username" label="用户名" >
+          {{currentUserName}}
+        </el-form-item>
+        <el-form-item label="角色" >
+          <el-select v-model="currentRoleId">
+            <el-option disabled label="请选择" :value="-1">
+            </el-option>
+            <el-option 
+            v-for="item in roles"
+            :key="item.id"
+            :label="item.roleName"
+            :value="item.id"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+       <div slot="footer" class="dialog-footer">
+        <el-button  @click="setRoleDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleSetRole">确 定</el-button>
+      </div>
+</el-dialog>
     </el-card>
 </template>
 
@@ -174,7 +201,14 @@ export default {
         ]
       },
        // 控制编辑用户的对话框显示或者隐藏
-      editUserDialogVisible:false
+      editUserDialogVisible:false,
+      //控制分配角色对话框的显示或者隐藏
+      setRoleDialogVisible:false,
+      //分配角色数据
+      currentUserName:'',
+      currentRoleId:-1,
+      roles:[],
+      currentUserId:''
     };
   },
   created() {
@@ -343,6 +377,38 @@ export default {
     handleClosed(){
       for(let key in this.formData){
         this.formData[key]='';
+      }
+    },
+    async handleShowSetRoleDialog(user){
+      //存储用户id
+      this.currentUserId = user.id;
+        this.currentUserName = user.username;
+       this.setRoleDialogVisible=true;
+       const res = await this.$http.get('roles');
+        this.roles =res.data.data;
+      //显示对应的角色
+      //根据用户id查询用户对象 角色id
+      const res1 = await this.$http.get(`users/${user.id}`);
+     // console.log(res1);
+      this.currentRoleId = res1.data.data.rid;
+    },
+    //分配角色
+    async handleSetRole(){
+      const res = await this.$http.put(`users/${this.currentUserId}/role`,{
+        rid:this.currentRoleId
+      });
+      const data = res.data;
+      const{meta:{status,msg}}=data;
+      if(status===200){
+        this.$message.success(msg);
+        //关闭弹出框
+        this.setRoleDialogVisible = false;
+        //重置数据
+        this.currentUserName = '';
+        this.currentRoleId=-1;
+        this.currentUserId=-1;
+      }else{
+        this.$message.error(msg);
       }
     }
   }
