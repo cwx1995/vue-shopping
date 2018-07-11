@@ -107,7 +107,7 @@ export default {
             }
       },
       //标签关闭
-     async handleClose(roleId,rightId){
+     async handleClose(role,rightId){
         //roleId 角色id、
         //rightid 权限id
        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -116,15 +116,15 @@ export default {
         type: 'warning'
         })
         .then(async() => {  
-        const{data:resData}=await this.$http.delete(`roles/${roleId}/rights/${rightId}`);
-        const{meta:{status,msg}} = resData;
+        const{data:resData}=await this.$http.delete(`roles/${role.id}/rights/${rightId}`);
+        const{meta:{status,msg},data} = resData;
         if(status===200){
             // this.loadData();
             //重新绑定当前角色的children 这样用户体验不好
-            
+            role.children=data;
             this.$message({
                 type: 'success',
-                message: 'msg'
+                message: '删除成功'
             });
         }else{
             this.$message.error(msg);
