@@ -8,12 +8,14 @@ import '../node_modules/element-ui/lib/theme-chalk/index.css';
 import '@/assets/css/style.css';
 import MyAxios from '@/plugins/MyAxios.js';
 import moment from 'moment';
+import Mybreadcrumb from '@/components/Mybreadcrumb';
 
 // 全局过滤器 格式化时间
 Vue.filter('fmtDate', (value, fmtString) => {
   return moment(value).format(fmtString);
 });
-
+//注册全局组件
+Vue.component(Mybreadcrumb.name,Mybreadcrumb);
 Vue.config.productionTip = false;
 // 注册MyAxios插件
 Vue.use(MyAxios);

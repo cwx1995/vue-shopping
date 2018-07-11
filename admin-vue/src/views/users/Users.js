@@ -63,9 +63,9 @@ export default {
       // 发送异步请求之前 旋转加载
       this.loading = true;
       // 发送请求之前 先获取token
-      const token = sessionStorage.getItem('token');
-      // 在请求头中设置token 查文档找
-      this.$http.defaults.headers.common['Authorization'] = token;
+      // const token = sessionStorage.getItem('token');
+      // // 在请求头中设置token 查文档找
+      // this.$http.defaults.headers.common['Authorization'] = token;
       // 发送异步请求，获取数据
       const res = await this.$http.get(`users?pagenum=${this.pagenum}&pagesize=${this.pagesize}&query=${this.searchValue}`);
       // 发送异步请求之后 取消旋转加载
