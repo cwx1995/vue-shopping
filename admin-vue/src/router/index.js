@@ -8,7 +8,7 @@ import Roles from '@/views/roles/Roles';
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       name: 'login',
@@ -42,3 +42,8 @@ export default new Router({
 
   ]
 });
+//路由的前置守卫
+router.beforeEach((to,from,next)=>{
+  
+})
+export default router;
