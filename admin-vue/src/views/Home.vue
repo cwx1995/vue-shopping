@@ -58,16 +58,16 @@ export default {
     };
   },
   // 判断登录
-  beforeCreate() {
-    // 从sessionStorage中获取token,看是否存在
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-      // 失败跳转回登录页
-      this.$router.push({ name: 'login' });
-      // 提示
-      this.$message.warning('请先登录');
-    }
-  },
+  // beforeCreate() {
+  //   // 从sessionStorage中获取token,看是否存在
+  //   const token = sessionStorage.getItem('token');
+  //   if (!token) {
+  //     // 失败跳转回登录页
+  //     this.$router.push({ name: 'login' });
+  //     // 提示
+  //     this.$message.warning('请先登录');
+  //   }
+  // },
   created() {
     // 加载当前用户的权限列表
     this.loadData();
