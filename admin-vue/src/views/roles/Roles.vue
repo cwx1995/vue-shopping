@@ -87,9 +87,9 @@
                 当要使用default-expanded-keys和default-checked-keys必须先设置node-key
                 default-checked-keys 设置默认选中的节点
             -->
-            <el-tree 
+            <el-tree
             ref="tree"
-            :data="treeData" 
+            :data="treeData"
             :props="defaultProps"
             show-checkbox
             node-key="id"
@@ -107,98 +107,98 @@
 
 <script>
 export default {
-  data(){
-      return {
-          list:[],
-          loading:true,
-          //权限对话框显示或者隐藏
-          loadingTree: true,
-          dialogVisible:false,
-          //shuju
-          treeData:[],
-          //配置展示数据中的属性
-          defaultProps:{
-              children:'children',
-              label:'authName'
-          },
-          //获取要选的的节点的id
-          checkedList:[],
-               // 记录当前修改的角色id
-         currentRoleId: -1
-      };
-  },
-  created(){
-     this.loadData();
-  },
-  methods:{
-      async loadData(){
-          this.loading=true;
-            // 发送请求之前 先获取token
-        //   const token = sessionStorage.getItem('token');
-        //   // 在请求头中设置token 查文档找
-        //   this.$http.defaults.headers.common['Authorization'] = token;
-            //   const res = await this.$http.get('roles');
-            const {data:resData}= await this.$http.get('roles');
-            this.loading=false;
-            const{data,meta:{status,msg}}=resData;
-            if(status===200){
-                this.list = data;
-                //   this.loadData();
-            }else{
-                this.$message.error(msg);
-            }
+  data() {
+    return {
+      list: [],
+      loading: true,
+      // 权限对话框显示或者隐藏
+      loadingTree: true,
+      dialogVisible: false,
+      // shuju
+      treeData: [],
+      // 配置展示数据中的属性
+      defaultProps: {
+        children: 'children',
+        label: 'authName'
       },
-      //标签关闭
-     async handleClose(role,rightId){
-        //roleId 角色id、
-        //rightid 权限id
-       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+      // 获取要选的的节点的id
+      checkedList: [],
+      // 记录当前修改的角色id
+      currentRoleId: -1
+    };
+  },
+  created() {
+    this.loadData();
+  },
+  methods: {
+    async loadData() {
+      this.loading = true;
+      // 发送请求之前 先获取token
+      //   const token = sessionStorage.getItem('token');
+      //   // 在请求头中设置token 查文档找
+      //   this.$http.defaults.headers.common['Authorization'] = token;
+      //   const res = await this.$http.get('roles');
+      const {data: resData} = await this.$http.get('roles');
+      this.loading = false;
+      const {data, meta: {status, msg}} = resData;
+      if (status === 200) {
+        this.list = data;
+        //   this.loadData();
+      } else {
+        this.$message.error(msg);
+      }
+    },
+    // 标签关闭
+    async handleClose(role, rightId) {
+      // roleId 角色id、
+      // rightid 权限id
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-        })
-        .then(async() => {  
-        const{data:resData}=await this.$http.delete(`roles/${role.id}/rights/${rightId}`);
-        const{meta:{status,msg},data} = resData;
-        if(status===200){
+      })
+        .then(async() => {
+          const {data: resData} = await this.$http.delete(`roles/${role.id}/rights/${rightId}`);
+          const {meta: {status, msg}, data} = resData;
+          if (status === 200) {
             // this.loadData();
-            //重新绑定当前角色的children 这样用户体验不好
-            role.children=data;
+            // 重新绑定当前角色的children 这样用户体验不好
+            role.children = data;
             this.$message({
-                type: 'success',
-                message: '删除成功'
+              type: 'success',
+              message: '删除成功'
             });
-        }else{
+          } else {
             this.$message.error(msg);
-        }
+          }
         })
         .catch(() => {
-            // 点击取消按钮执行
-            this.$message({
+          // 点击取消按钮执行
+          this.$message({
             type: 'info',
             message: '已取消删除'
-            });
-        }); 
+          });
+        });
     },
-    async handleOpenDialog(){
-        this.loadingTree = true;
-        const {data:resData} = await this.$http.get('rights/tree');
-        this.loadingTree = false;
-        const{data,meta:{status,msg}} = resData;
-        this.treeData = data;
-        if(status===200){}else{
-            this.$message.error(msg);
-        }
+    async handleOpenDialog() {
+      this.loadingTree = true;
+      const {data: resData} = await this.$http.get('rights/tree');
+      this.loadingTree = false;
+      const {data, meta: {status, msg}} = resData;
+      this.treeData = data;
+      if (status === 200) {} else {
+        this.$message.error(msg);
+      }
     },
-    handleShowRightsDialog(role){
-        // 记录角色id， 分配权限的时候使用
+    handleShowRightsDialog(role) {
+      // 记录角色id， 分配权限的时候使用
       this.currentRoleId = role.id;
-        //点击按钮 显示分配权限的对话框
-        this.dialogVisible = true;
-        //获取当前角色权限的id
-        //便利一级权限
-        const arr=[];
-         role.children.forEach((item1) => {
+      // 点击按钮 显示分配权限的对话框
+      this.dialogVisible = true;
+      // 获取当前角色权限的id
+      // 便利一级权限
+      const arr = [];
+      role.children.forEach((item1) => {
         // arr.push(item1.id);
         // 遍历二级权限
         item1.children.forEach((item2) => {
@@ -209,31 +209,31 @@ export default {
           });
         });
       });
-        this.checkedList = arr;
+      this.checkedList = arr;
     },
-    //点击确顶按钮 分配权限
-    async handleSetRights(){
-        //获取全选节点id 
-        const checkedKeys = this.$refs.tree.getCheckedKeys();
-        //获取半选id
-        const halfCheckedKeys = this.$refs.tree.getHalfCheckedKeys();
-        //合并数组
-        const newArray = [...checkedKeys,...halfCheckedKeys];
-        // console.log(newArray);
-        const {data:resData} = await this.$http.post(`roles/${this.currentRoleId}/rights`,{
-            rids:newArray.join(',')
-        });
-        const {meta:{status,msg}} = resData;
-        if(status===200){
-            //关闭对话框
-            this.dialogVisible=false;
-            //提示
-            this.$message.success(msg);
-            //重载数据
-            this.loadData();
-        }else{
-            this.$message.error(msg);
-        }
+    // 点击确顶按钮 分配权限
+    async handleSetRights() {
+      // 获取全选节点id
+      const checkedKeys = this.$refs.tree.getCheckedKeys();
+      // 获取半选id
+      const halfCheckedKeys = this.$refs.tree.getHalfCheckedKeys();
+      // 合并数组
+      const newArray = [...checkedKeys, ...halfCheckedKeys];
+      // console.log(newArray);
+      const {data: resData} = await this.$http.post(`roles/${this.currentRoleId}/rights`, {
+        rids: newArray.join(',')
+      });
+      const {meta: {status, msg}} = resData;
+      if (status === 200) {
+        // 关闭对话框
+        this.dialogVisible = false;
+        // 提示
+        this.$message.success(msg);
+        // 重载数据
+        this.loadData();
+      } else {
+        this.$message.error(msg);
+      }
     }
   }
 };

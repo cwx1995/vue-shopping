@@ -9,8 +9,8 @@
 
 <script>
 export default {
-    name:'MyBreadcrumb',
-    props:['level1','level2']
+  name: 'MyBreadcrumb',
+  props: ['level1', 'level2']
 };
 </script>
 

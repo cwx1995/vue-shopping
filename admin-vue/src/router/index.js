@@ -3,12 +3,12 @@ import Router from 'vue-router';
 import Login from '@/views/login';
 import Home from '@/views/Home';
 import Users from '@/views/users/Users';
-import Rights from '@/views/roles/Rights'; 
+import Rights from '@/views/roles/Rights';
 import Roles from '@/views/roles/Roles';
 
 Vue.use(Router);
 
-const router = new Router({
+export default new Router({
   routes: [
     {
       name: 'login',
@@ -36,14 +36,9 @@ const router = new Router({
           name: 'roles',
           path: '/roles',
           component: Roles
-        },
+        }
       ]
     }
 
   ]
 });
-//路由的前置守卫
-router.beforeEach((to,from,next)=>{
-  
-})
-export default router;

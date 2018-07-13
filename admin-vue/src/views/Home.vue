@@ -16,25 +16,26 @@
       </el-row>
     </el-header>
     <el-container>
+      <!-- 侧边栏 -->
       <el-aside class="aside" width="200px">
             <el-menu
             :router="true"
             :unique-opened="true"
         class="menu">
-        <!-- 一级菜单 -->
+        <!-- 一及菜单 -->
         <el-submenu
-         v-for="item in menus"
-         :key="item.id"
-          :index="item.id">
+        v-for="item in menus"
+        :key="item.id"
+        index="item.id">
             <template slot="title">
             <i class="el-icon-location"></i>
             <span>{{item.authName}}</span>
             </template>
             <!-- 二级菜单 -->
             <el-menu-item
-             v-for="item1 in item.children"
-             :key="item1.id"
-             :index="'/' + item1.path">
+            v-for="item1 in item.children"
+            :key="item1.id"
+            :index="'/'+item1.path">
                 <i class="el-icon-menu"></i>
                {{item1.authName}}
                 </el-menu-item>
@@ -51,9 +52,9 @@
 
 <script>
 export default {
-  data(){
-    return{
-      menus:[]
+  data() {
+    return {
+      menus: []
     };
   },
   // 判断登录
@@ -67,15 +68,15 @@ export default {
       this.$message.warning('请先登录');
     }
   },
-  created(){
-    //加载用户当前权限列表
+  created() {
+    // 加载当前用户的权限列表
     this.loadData();
   },
   methods: {
-    async loadData(){
-      const {data:resData} = await this.$http.get('menus');
-      const{data,meta:{status,msg}} = resData;
-      if(status===200){
+    async loadData() {
+      const {data: resData} = await this.$http.get('menus');
+      const {data, meta: {status, msg}} = resData;
+      if (status === 200) {
         this.menus = data;
       }
     },

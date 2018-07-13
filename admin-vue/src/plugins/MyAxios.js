@@ -27,11 +27,11 @@ MyAxios.install = function (Vue) {
     // Do something with request error
     return Promise.reject(error);
   });
-   // Add a response interceptor
+  // Add a response interceptor
   // 添加响应的拦截器
   instance.interceptors.response.use(function (response) {
     // Do something with response data
-    
+
     return response;
   }, function (error) {
     // Do something with response error

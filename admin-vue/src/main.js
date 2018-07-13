@@ -14,8 +14,8 @@ import Mybreadcrumb from '@/components/Mybreadcrumb';
 Vue.filter('fmtDate', (value, fmtString) => {
   return moment(value).format(fmtString);
 });
-//注册全局组件
-Vue.component(Mybreadcrumb.name,Mybreadcrumb);
+// 注册全局组件
+Vue.component(Mybreadcrumb.name, Mybreadcrumb);
 Vue.config.productionTip = false;
 // 注册MyAxios插件
 Vue.use(MyAxios);
