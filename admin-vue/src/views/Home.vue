@@ -78,6 +78,8 @@ export default {
       const {data, meta: {status, msg}} = resData;
       if (status === 200) {
         this.menus = data;
+      } else {
+        this.$message.error(msg);
       }
     },
     // 退出登录
